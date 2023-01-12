@@ -1,12 +1,12 @@
+import { Timer } from "./Timer";
 import "./styles.css";
 
 function App() {
+  
   return (
-    <div className="App">
-      <section className="home">
-        <p className="timer">15:00</p>
-        <p>START</p>
-      </section>
+    <div className="container">
+      <h1>POMODORO - TIMER</h1>
+      <Timer />
     </div>
   );
 }
