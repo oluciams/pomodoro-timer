@@ -1,21 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { formatTime } from "./utils/formatTime.js";
 import "./styles.css";
 
 export const Timer = () => {
+  
+  const time = Math.floor((60 - 60) + 5);
 
-  const [isActive, setIsActive] = useState(true)
+  const [isActive, setIsActive] = useState(false); 
+  const [activeColor, setActiveColor] = useState(true);
+  const [timer, setTimer] = useState(time);
+ 
+  useEffect(() => {
+    let interval = null;
+    if (isActive === true && activeColor === false ){
+      setTimer(time);
+      setActiveColor(true);
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000); 
+      
+    } else if (isActive) {
+      interval = setInterval(() => {
+      setTimer(prevTimer => prevTimer - 1)  
+      }, 1000) 
+    }else {
+      clearInterval(interval)
+    }
+    return  () => clearInterval(interval)
+    
+  }, [isActive]);
+
+  useEffect(() => {
+    if (timer === 0) {
+      setTimeout(() => {
+        alert("Se ha terminado el tiempo");
+      }, 1000);
+      setTimer(0);
+      setIsActive(false);
+      setActiveColor(false)
+    }
+  }, [timer]);
 
   return (
-    <section className="home">
-      <div className="timer">15:00</div>
-
+    <section className={activeColor ? "home start" : "home stop"}>
+      <p className="timer">{formatTime(timer)}</p>
       {isActive ? (
         <button onClick={() => setIsActive(false)} className="button">
-          START
+          STOP
         </button>
       ) : (
         <button onClick={() => setIsActive(true)} className="button">
-          STOP
+          START
         </button>
       )}
 
