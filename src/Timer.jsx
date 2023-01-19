@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { formatTime } from "./utils/formatTime.js";
 import "./styles.css";
 
-export const Timer = () => {
+export const Timer = () => {  
   
-  //const time = Math.floor((60 - 60) + 60); 
   const timeSeg = 1500;
   const timeMin = 25;
 
@@ -15,9 +14,12 @@ export const Timer = () => {
   const [timerMin, setTimerMin] = useState(timeMin);
 
   const handleEdit = () => {
-    let timeMinEdit = timerMin * 60;
-    setTimerSeg(timeMinEdit);
-    setSetting(false);
+    if (timerMin >= 1 && timerMin <= 25) {
+      let timeMinEdit = parseInt(timerMin * 60);
+      setTimerSeg(timeMinEdit);
+      setSetting(false);
+    }
+    return
   };
 
   const handleSetting = () => {
