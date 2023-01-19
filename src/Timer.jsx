@@ -4,24 +4,38 @@ import "./styles.css";
 
 export const Timer = () => {
   
-  const time = Math.floor((60 - 60) + 5);
+  //const time = Math.floor((60 - 60) + 60); 
+  const timeSeg = 1500;
+  const timeMin = 25;
 
   const [isActive, setIsActive] = useState(false); 
   const [activeColor, setActiveColor] = useState(true);
-  const [timer, setTimer] = useState(time);
+  const [timerSeg, setTimerSeg] = useState(timeSeg);
+  const [setting, setSetting] = useState(false)
+  const [timerMin, setTimerMin] = useState(timeMin);
+
+  const handleEdit = () => {
+    let timeMinEdit = timerMin * 60;
+    setTimerSeg(timeMinEdit);
+    setSetting(false);
+  };
+
+  const handleSetting = () => {
+    setSetting(true)
+  }
  
   useEffect(() => {
     let interval = null;
     if (isActive === true && activeColor === false ){
-      setTimer(time);
+      setTimerSeg(timeSeg);
       setActiveColor(true);
       interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
+        setTimerSeg((prevTimer) => prevTimer - 1);
       }, 1000); 
       
     } else if (isActive) {
       interval = setInterval(() => {
-      setTimer(prevTimer => prevTimer - 1)  
+      setTimerSeg(prevTimer => prevTimer - 1)  
       }, 1000) 
     }else {
       clearInterval(interval)
@@ -31,30 +45,53 @@ export const Timer = () => {
   }, [isActive]);
 
   useEffect(() => {
-    if (timer === 0) {
+    if (timerSeg === 0) {
       setTimeout(() => {
         alert("Se ha terminado el tiempo");
       }, 1000);
-      setTimer(0);
+      setTimerSeg(0);
       setIsActive(false);
       setActiveColor(false)
     }
-  }, [timer]);
+  }, [timerSeg]);
 
   return (
     <section className={activeColor ? "home start" : "home stop"}>
-      <p className="timer">{formatTime(timer)}</p>
+      {setting ? (
+        <div>
+          <p className="text-edit">Minutes</p>
+          <input
+            className="timer-edit"
+            type="number"
+            min="1"
+            max="25"
+            value={timerMin}
+            onChange={(e) => setTimerMin(e.target.value)}
+          />
+          <button onClick={handleEdit} className="timer-edit">
+            Edit
+          </button>
+        </div>
+        )
+       :
+        (
+        <p className="timer">{formatTime(timerSeg)}</p>
+        )
+      }
+
       {isActive ? (
         <button onClick={() => setIsActive(false)} className="button">
           STOP
         </button>
-      ) : (
+        )
+       :
+        (
         <button onClick={() => setIsActive(true)} className="button">
           START
         </button>
-      )}
-
-      <span className="setting">
+       )
+      }
+      <span onClick={handleSetting} className="setting">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
